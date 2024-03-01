@@ -10,6 +10,7 @@ class InfiniteCanvasEdgeRenderer extends StatelessWidget {
       {super.key,
       required this.controller,
       required this.edges,
+      this.edgePaintBrush
       this.linkStart,
       this.linkEnd,
       this.straightLines = false});
@@ -18,13 +19,14 @@ class InfiniteCanvasEdgeRenderer extends StatelessWidget {
   final List<InfiniteCanvasEdge> edges;
   final Offset? linkStart, linkEnd;
   final bool straightLines;
+  final Paint? edgePaintBrush;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return CustomPaint(
       painter: InlinePainter(
-        brush: Paint()
+        brush: edgePaintBrush ?? Paint()
           ..color = colors.outlineVariant
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2,
