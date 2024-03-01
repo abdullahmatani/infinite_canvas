@@ -28,7 +28,8 @@ class InfiniteCanvas extends StatefulWidget {
       this.backgroundBuilder,
       this.drawVisibleOnly = false,
       this.canAddEdges = false,
-      this.edgesUseStraightLines = false});
+      this.edgesUseStraightLines = false,
+      this.edgePaintBrush});
 
   final InfiniteCanvasController controller;
   final Size gridSize;
@@ -38,6 +39,7 @@ class InfiniteCanvas extends StatefulWidget {
   final bool canAddEdges;
   final bool edgesUseStraightLines;
   final Widget Function(BuildContext, Rect)? backgroundBuilder;
+  final Paint? edgePaintBrush;
 
   @override
   State<InfiniteCanvas> createState() => InfiniteCanvasState();
@@ -291,6 +293,7 @@ class InfiniteCanvasState extends State<InfiniteCanvas> {
                         ),
                         Positioned.fill(
                           child: InfiniteCanvasEdgeRenderer(
+                            edgePaintBrush: widget.edgePaintBrush,
                             controller: controller,
                             edges: edges,
                             linkStart: controller
