@@ -29,7 +29,8 @@ class InfiniteCanvas extends StatefulWidget {
       this.drawVisibleOnly = false,
       this.canAddEdges = false,
       this.edgesUseStraightLines = false,
-      this.edgePaintBrush});
+      this.edgePaintBrush,
+      this.customOnKeyEvent});
 
   final InfiniteCanvasController controller;
   final Size gridSize;
@@ -40,7 +41,7 @@ class InfiniteCanvas extends StatefulWidget {
   final bool edgesUseStraightLines;
   final Widget Function(BuildContext, Rect)? backgroundBuilder;
   final Paint? edgePaintBrush;
-
+  final void Function(KeyEvent)? customOnKeyEvent;
   @override
   State<InfiniteCanvas> createState() => InfiniteCanvasState();
 }
@@ -157,50 +158,52 @@ class InfiniteCanvasState extends State<InfiniteCanvas> {
       menus: widget.menus,
       child: KeyboardListener(
         focusNode: controller.focusNode,
-        onKeyEvent: (event) {
-          if (event is KeyDownEvent) {
-            if (event.logicalKey == LogicalKeyboardKey.shiftLeft ||
-                event.logicalKey == LogicalKeyboardKey.shiftRight) {
-              controller.shiftPressed = true;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.controlLeft ||
-                event.logicalKey == LogicalKeyboardKey.controlRight) {
-              controller.controlPressed = true;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.metaLeft ||
-                event.logicalKey == LogicalKeyboardKey.metaRight) {
-              controller.metaPressed = true;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.space) {
-              controller.spacePressed = true;
-            }
-          }
-          if (event is KeyUpEvent) {
-            if (event.logicalKey == LogicalKeyboardKey.shiftLeft ||
-                event.logicalKey == LogicalKeyboardKey.shiftRight) {
-              controller.shiftPressed = false;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.metaLeft ||
-                event.logicalKey == LogicalKeyboardKey.metaRight) {
-              controller.metaPressed = false;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.controlLeft ||
-                event.logicalKey == LogicalKeyboardKey.controlRight) {
-              controller.controlPressed = false;
-              controller.linkStart = null;
-              controller.linkEnd = null;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.space) {
-              controller.spacePressed = false;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.delete ||
-                event.logicalKey == LogicalKeyboardKey.backspace) {
-              if (controller.focusNode.hasFocus) {
-                controller.deleteSelection();
-              }
-            }
-          }
-        },
+        onKeyEvent: (widget.customOnKeyEvent != null)
+            ? widget.customOnKeyEvent
+            : (event) {
+                if (event is KeyDownEvent) {
+                  if (event.logicalKey == LogicalKeyboardKey.shiftLeft ||
+                      event.logicalKey == LogicalKeyboardKey.shiftRight) {
+                    controller.shiftPressed = true;
+                  }
+                  if (event.logicalKey == LogicalKeyboardKey.controlLeft ||
+                      event.logicalKey == LogicalKeyboardKey.controlRight) {
+                    controller.controlPressed = true;
+                  }
+                  if (event.logicalKey == LogicalKeyboardKey.metaLeft ||
+                      event.logicalKey == LogicalKeyboardKey.metaRight) {
+                    controller.metaPressed = true;
+                  }
+                  if (event.logicalKey == LogicalKeyboardKey.space) {
+                    controller.spacePressed = true;
+                  }
+                }
+                if (event is KeyUpEvent) {
+                  if (event.logicalKey == LogicalKeyboardKey.shiftLeft ||
+                      event.logicalKey == LogicalKeyboardKey.shiftRight) {
+                    controller.shiftPressed = false;
+                  }
+                  if (event.logicalKey == LogicalKeyboardKey.metaLeft ||
+                      event.logicalKey == LogicalKeyboardKey.metaRight) {
+                    controller.metaPressed = false;
+                  }
+                  if (event.logicalKey == LogicalKeyboardKey.controlLeft ||
+                      event.logicalKey == LogicalKeyboardKey.controlRight) {
+                    controller.controlPressed = false;
+                    controller.linkStart = null;
+                    controller.linkEnd = null;
+                  }
+                  if (event.logicalKey == LogicalKeyboardKey.space) {
+                    controller.spacePressed = false;
+                  }
+                  if (event.logicalKey == LogicalKeyboardKey.delete ||
+                      event.logicalKey == LogicalKeyboardKey.backspace) {
+                    if (controller.focusNode.hasFocus) {
+                      controller.deleteSelection();
+                    }
+                  }
+                }
+              },
         child: Listener(
           onPointerDown: (details) {
             controller.mouseDown = true;
