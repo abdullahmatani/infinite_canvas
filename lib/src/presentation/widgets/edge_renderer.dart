@@ -10,7 +10,7 @@ class InfiniteCanvasEdgeRenderer extends StatelessWidget {
       {super.key,
       required this.controller,
       required this.edges,
-      this.edgePaintBrush
+      this.edgePaintBrush,
       this.linkStart,
       this.linkEnd,
       this.straightLines = false});
@@ -26,10 +26,12 @@ class InfiniteCanvasEdgeRenderer extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return CustomPaint(
       painter: InlinePainter(
-        brush: edgePaintBrush ?? Paint()
-          ..color = colors.outlineVariant
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2,
+        brush: edgePaintBrush == null
+            ? (Paint()
+              ..color = colors.outlineVariant
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 2)
+            : edgePaintBrush!,
         builder: (brush, canvas, rect) {
           for (final edge in edges) {
             final from =
@@ -48,10 +50,12 @@ class InfiniteCanvasEdgeRenderer extends StatelessWidget {
         },
       ),
       foregroundPainter: InlinePainter(
-        brush: Paint()
-          ..color = colors.primary
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2,
+        brush: edgePaintBrush == null
+            ? (Paint()
+              ..color = colors.outlineVariant
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 2)
+            : edgePaintBrush!,
         builder: (brush, canvas, child) {
           if (linkStart != null && linkEnd != null) {
             drawEdge(
